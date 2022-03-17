@@ -10,29 +10,22 @@
     <script src="https://kit.fontawesome.com/7b383c2d35.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">   
-        <div class="playboard">
-            <button class="start-button">
+    <section class="game">
+        <header class="game__header">
+            <button class="game__button">
                 <i class="fa-solid fa-caret-right"></i>
             </button>
+            <span class="game__timer">0:0</span>
+            <span class="game__score">0</span>
+        </header>
+        <section class="field"></section>
+    </section> 
 
-            <div class="timer">
-                <p class="timer__text">00:00</p>
-            </div>
-
-            <div class="counter">
-                <p class="counter__text">0</p>
-            </div>
-
-            <div class="field"></div>
-
-            <div class="result">
-                <button class="result__replay-button">
-                    <i class="fa-solid fa-arrow-rotate-right"></i>
-                </button>
-                <p class="result__text">YOU WON</p>
-            </div>
-        </div> 
-    </div>
+    <section class="result">
+        <button class="result__replay-button">
+            <i class="fa-solid fa-arrow-rotate-right"></i>
+        </button>
+        <span class="result__text">YOU WON</span>
+    </section>
 </body>
 </html>

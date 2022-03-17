@@ -1,6 +1,6 @@
-const startButton = document.querySelector('.start-button');
-const timer__text = document.querySelector('.timer__text');
-const count__text = document.querySelector('.counter__text');
+const startButton = document.querySelector('.game__button');
+const timer__text = document.querySelector('.game__timer');
+const count__text = document.querySelector('.game__score');
 const resultBoard = document.querySelector('.result');
 const resultText = document.querySelector('.result__text');
 const field = document.querySelector('.field');
@@ -20,6 +20,7 @@ startButton.addEventListener('click', (e)=>{
     startButton.classList.add('unactive');
     gameStart(10,count,10);
 })
+
 
 replayButton.addEventListener('click', (e)=>{
     // 1. time reset
@@ -63,11 +64,6 @@ field.addEventListener('click', e => {
         return;
     }
 })
-bgSound.addEventListener("canplaythrough", event => {
-    /* the audio is now playable; play it if permissions allow */
-    bgSound.play();
-  });
-
 
 function gameStart(number,count, timer){
     setObj('./img/bug.png',number)    

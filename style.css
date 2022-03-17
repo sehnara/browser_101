@@ -28,13 +28,13 @@
   height: 100vh;
   background: center/cover url("./img/background.png") no-repeat;
 }
-.playboard {
+.game {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 90px 0;
 }
-.start-button {
+.game__button {
   width: 55px;
   height: 55px;
   border: 5px solid var(--color-black);
@@ -45,18 +45,18 @@
   transition: all 200ms ease-in;
   cursor: pointer;
 }
-.start-button:hover {
+.game__button:hover {
   background-color: var(--color-salgoo);
   color: var(--color-green);
   transform: scale(1.2);
 }
 
-.start-button.unactive {
+.game__button.unactive {
   opacity: 0;
   pointer-events: none;
 }
 
-.timer {
+.game__timer {
   text-align: center;
   width: 200px;
   height: 60px;
@@ -64,14 +64,11 @@
   border: 5px solid var(--color-black);
   border-radius: 15px;
   background-color: var(--color-white);
-}
-
-.timer__text {
   font-size: var(--font-big);
   font-weight: var(--font-bold);
 }
 
-.counter {
+.game__score {
   margin-top: 10px;
   background-color: var(--color-salgoo);
   width: 60px;
@@ -80,12 +77,10 @@
   text-align: center;
   border-radius: 50%;
   border: 5px solid var(--color-black);
-}
-
-.counter__text {
   color: var(--color-white);
   font-size: var(--font-big);
   font-weight: var(--font-bold);
+  display: inline-block;
 }
 
 .field {
