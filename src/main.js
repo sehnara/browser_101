@@ -1,12 +1,12 @@
 'use strict'
 
+import PopUp from './popup.js';
+
 const startButton = document.querySelector('.game__button');
 const timer__text = document.querySelector('.game__timer');
 const count__text = document.querySelector('.game__score');
-const resultBoard = document.querySelector('.result');
-const resultText = document.querySelector('.result__text');
 const field = document.querySelector('.field');
-const replayButton = document.querySelector('.result__replay-button');
+
 
 // audio
 const bgSound = new Audio('./sound/bg.mp3');
@@ -24,6 +24,13 @@ let started = false;
 let count = CARROT_COUNT;
 let timer = undefined; 
 
+const gameFinishedBanner = new PopUp();
+
+gameFinishedBanner.setClickListner(()=>{
+    startGame();
+    started = !started;
+})
+
 startButton.addEventListener('click', (e)=>{
     if(started){
         stopGame();
@@ -31,12 +38,6 @@ startButton.addEventListener('click', (e)=>{
     else{
         startGame();
     }    
-    started = !started;
-})
-
-replayButton.addEventListener('click', (e)=>{
-    resultBoard.classList.remove('visible');
-    startGame();
     started = !started;
 })
 
@@ -69,7 +70,7 @@ field.addEventListener('click', e => {
 function finishGame(win){
     started = false;
     clearInterval(timer);
-    showPopUp(win ? 'YOU WON!!' :'YOU LOSE!!')
+    gameFinishedBanner.show(win ? 'YOU WON!!' :'YOU LOSE!!')
     stopGame(bgSound);
 }
 
@@ -96,7 +97,7 @@ function startGame(){
 function stopGame(){
     stopGameTimer();    
     // bug, carrot 막아야 한다.
-    showPopUp('Replay??');  
+    gameFinishedBanner.show('Replay??');  
     stopSound(bgSound);   
 }
 
@@ -121,11 +122,6 @@ function showStartButton(){
 function showTimerAndScore(){
     timer__text.style.visibility = "visible"
     count__text.style.visibility = "visible"
-}
-
-function showPopUp(text){
-    resultText.innerText= text;
-    resultBoard.classList.add('visible');
 }
 
 function setObj(img,number){
