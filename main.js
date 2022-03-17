@@ -15,13 +15,14 @@ const carrotPullSound = new Audio('./sound/carrot_pull.mp3');
 const winSound = new Audio('./sound/game_win.mp3');
 const failSound = new Audio('./sound/alert.wav');
 
-let CARROT_COUNT = 10; // carrot 초기화 
-let BUG_COUNT = 10;  // bug 초기화
+const CARROT_COUNT = 20; // carrot 초기화 
+const BUG_COUNT = 20;  // bug 초기화
+const GAME_DURATION_SEC = 5; 
 
 // 
 let started = false;
-let score = 0;
-let timer = 10; 
+let count = CARROT_COUNT;
+let timer = undefined; 
 
 startButton.addEventListener('click', (e)=>{
     if(started){
@@ -34,10 +35,14 @@ startButton.addEventListener('click', (e)=>{
 })
 
 replayButton.addEventListener('click', (e)=>{
-    stopGame()
+    resultBoard.classList.remove('visible');
+    startGame();
+    started = !started;
 })
 
 field.addEventListener('click', e => {
+    if(!started)return;
+
     const target = e.target.alt;
     if(target !== 'carrot' && target !== 'bug') return
     
@@ -48,36 +53,51 @@ field.addEventListener('click', e => {
         count--;        
         setCount(count)
         if(count === 0){
-            winSound.play();
-            clearInterval(timer);
-            resultText.innerText='YOU WON!!'
-            resultBoard.classList.add('visible');
+            winSound.play();            
+            finishGame(true);
         }
     }
     // 2) click bug
     else { 
         bugPullSound.play();
-        clearInterval(timer);
         failSound.play();
-        resultText.innerText='YOU LOSE!!'
-        resultBoard.classList.add('visible');
+        finishGame(false);
         return;
     }
 })
 
+function finishGame(win){
+    started = false;
+    clearInterval(timer);
+    showPopUp(win ? 'YOU WON!!' :'YOU LOSE!!')
+    stopGame(bgSound);
+}
+
+function playSound(sound){
+    sound.currentTime = 0;
+    sound.play();
+}
+
+function stopSound(sound){
+    sound.pause();
+}
+
 function startGame(){
+    count = CARROT_COUNT;
     initGame();
     showStopButton();
     showTimerAndScore();
-
-    setCount(CARROT_COUNT)
-    setTimer(timer)
+    //
+    setTimer();
+    setCount(CARROT_COUNT);    
+    playSound(bgSound);   
 }
 
-function stopGame(){    
-    initGame()
-    setCount(CARROT_COUNT)
-    setTimer(timer)
+function stopGame(){
+    stopGameTimer();    
+    // bug, carrot 막아야 한다.
+    showPopUp('Replay??');  
+    stopSound(bgSound);   
 }
 
 function initGame(){  
@@ -94,12 +114,19 @@ function initGame(){
 function showStopButton(){
     startButton.innerHTML= '<i class="fa-solid fa-stop"></i>'  
 }
+function showStartButton(){
+    startButton.innerHTML= '<i class="fa-solid fa-play"></i>' 
+}
 
 function showTimerAndScore(){
     timer__text.style.visibility = "visible"
     count__text.style.visibility = "visible"
 }
 
+function showPopUp(text){
+    resultText.innerText= text;
+    resultBoard.classList.add('visible');
+}
 
 function setObj(img,number){
     const fieldRect = field.getBoundingClientRect();    
@@ -118,23 +145,30 @@ function setObj(img,number){
     }
 }
 
-function setTimer(s){    
-    let second = s-1
+function setTimer(){    
+    let second = GAME_DURATION_SEC-1
     let msc = 10
+
     timer = setInterval(()=>{
         if(second < 0) {
             failSound.play();
-            resultText.innerText='Time Over!!'
-            resultBoard.classList.add('visible');            
+            finishGame(false);    
             return;
         }
         msc --;
-        timer__text.innerText = `${second < 10 ? '0'+second : second}:${msc < 10 ? '0'+msc : msc}`
+        updateTimerText(second, msc);
         if(msc === 0){
             second--;
-            msc = 10
+            msc = 10;
         }
     },100)    
+}
+function stopGameTimer(){
+    clearInterval(timer);
+}
+
+function updateTimerText(second,msc){
+    timer__text.innerText = `${second < 10 ? '0'+second : second}:${msc < 10 ? '0'+msc : msc}`
 }
 
 function setCount(number){
