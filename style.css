@@ -23,17 +23,21 @@
   box-sizing: content-box;
 }
 
-.container {
+body {
   width: 100%;
   height: 100vh;
   background: center/cover url("./img/background.png") no-repeat;
 }
+
 .game {
+}
+.game__header {
+  padding: 90px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 90px 0;
 }
+
 .game__button {
   width: 55px;
   height: 55px;
@@ -102,9 +106,11 @@
   transform: translateY(180px);
   opacity: 0;
   pointer-events: none;
+  margin: -90px auto;
 }
 .result.visible {
-  opacity: 0.8;
+  opacity: 1;
+  background-color: #00000090;
   pointer-events: auto;
 }
 
@@ -127,4 +133,8 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+.bug:hover,
+.carrot:hover {
+  transform: scale(1.2);
 }
