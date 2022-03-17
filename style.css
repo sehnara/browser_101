@@ -55,11 +55,6 @@ body {
   transform: scale(1.2);
 }
 
-.game__button.unactive {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .game__timer {
   text-align: center;
   width: 200px;
@@ -70,6 +65,7 @@ body {
   background-color: var(--color-white);
   font-size: var(--font-big);
   font-weight: var(--font-bold);
+  visibility: hidden;
 }
 
 .game__score {
@@ -85,6 +81,7 @@ body {
   font-size: var(--font-big);
   font-weight: var(--font-bold);
   display: inline-block;
+  visibility: hidden;
 }
 
 .field {

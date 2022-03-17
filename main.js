@@ -1,3 +1,5 @@
+'use strict'
+
 const startButton = document.querySelector('.game__button');
 const timer__text = document.querySelector('.game__timer');
 const count__text = document.querySelector('.game__score');
@@ -13,28 +15,26 @@ const carrotPullSound = new Audio('./sound/carrot_pull.mp3');
 const winSound = new Audio('./sound/game_win.mp3');
 const failSound = new Audio('./sound/alert.wav');
 
-let count = 10 // carrot 잡은 횟수
-let inteval = 0; 
+let CARROT_COUNT = 10; // carrot 초기화 
+let BUG_COUNT = 10;  // bug 초기화
+
+// 
+let started = false;
+let score = 0;
+let timer = 10; 
 
 startButton.addEventListener('click', (e)=>{
-    startButton.classList.add('unactive');
-    gameStart(10,count,10);
+    if(started){
+        stopGame();
+    }
+    else{
+        startGame();
+    }    
+    started = !started;
 })
 
-
 replayButton.addEventListener('click', (e)=>{
-    // 1. time reset
-    clearInterval(inteval);
-    // 2. remove result board
-    resultBoard.classList.remove('visible')
-    // 3. count reset
-    count = 10
-    // 4. field reset
-    while(field.firstChild){
-        field.removeChild(field.firstChild)
-    }
-    // 5. restart
-    gameStart(10,count,10);
+    stopGame()
 })
 
 field.addEventListener('click', e => {
@@ -49,7 +49,7 @@ field.addEventListener('click', e => {
         setCount(count)
         if(count === 0){
             winSound.play();
-            clearInterval(inteval);
+            clearInterval(timer);
             resultText.innerText='YOU WON!!'
             resultBoard.classList.add('visible');
         }
@@ -57,7 +57,7 @@ field.addEventListener('click', e => {
     // 2) click bug
     else { 
         bugPullSound.play();
-        clearInterval(inteval);
+        clearInterval(timer);
         failSound.play();
         resultText.innerText='YOU LOSE!!'
         resultBoard.classList.add('visible');
@@ -65,17 +65,63 @@ field.addEventListener('click', e => {
     }
 })
 
-function gameStart(number,count, timer){
-    setObj('./img/bug.png',number)    
-    setObj('./img/carrot.png',number)    
-    setCount(count)
+function startGame(){
+    initGame();
+    showStopButton();
+    showTimerAndScore();
+
+    setCount(CARROT_COUNT)
     setTimer(timer)
+}
+
+function stopGame(){    
+    initGame()
+    setCount(CARROT_COUNT)
+    setTimer(timer)
+}
+
+function initGame(){  
+    // 초기화    
+    clearInterval(timer);    
+    count__text.innerText = CARROT_COUNT
+    field.innerHTML='';
+    
+    // 벌레, 당근 생성
+    setObj('./img/bug.png',BUG_COUNT)    
+    setObj('./img/carrot.png',CARROT_COUNT)    
+}
+
+function showStopButton(){
+    startButton.innerHTML= '<i class="fa-solid fa-stop"></i>'  
+}
+
+function showTimerAndScore(){
+    timer__text.style.visibility = "visible"
+    count__text.style.visibility = "visible"
+}
+
+
+function setObj(img,number){
+    const fieldRect = field.getBoundingClientRect();    
+    const seperator = img.split('/')[2].split('.')[0];
+
+    for (let i = 0; i < number; i++) {
+        const x = Math.round(Math.random()*(fieldRect.width-100));
+        const y = Math.round(Math.random()*(fieldRect.height-100));    
+        
+        const bug = document.createElement('button');        
+        bug.setAttribute('class', 'bug');
+        bug.innerHTML =`<img src="${img}" alt="${ seperator === 'bug'? 'bug' : 'carrot'}">`
+
+        bug.style.transform = `translate(${x}px,${y}px)`;        
+        field.append(bug)
+    }
 }
 
 function setTimer(s){    
     let second = s-1
     let msc = 10
-    inteval = setInterval(()=>{
+    timer = setInterval(()=>{
         if(second < 0) {
             failSound.play();
             resultText.innerText='Time Over!!'
@@ -94,24 +140,5 @@ function setTimer(s){
 function setCount(number){
     count__text.innerHTML = number
 }
-
-function setObj(img,number){
-    const fieldHeight = field.clientHeight;
-    const fieldWidth = field.clientWidth;
-    const seperator = img.split('/')[2].split('.')[0];
-
-    for (let i = 0; i < number; i++) {
-        const x = Math.round(Math.random()*(fieldWidth-100));
-        const y = Math.round(Math.random()*(fieldHeight-100));    
-        
-        const bug = document.createElement('button');        
-        bug.setAttribute('class', 'bug');
-        bug.innerHTML =`<img src="${img}" alt="${ seperator === 'bug'? 'bug' : 'carrot'}">`
-
-        bug.style.transform = `translate(${x}px,${y}px)`;        
-        field.append(bug)
-    }
-}
-
 
 
