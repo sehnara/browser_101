@@ -1,6 +1,7 @@
 'use strict'
 import PopUp from './popup.js';
-import GameBuilder from './game.js';
+import GameBuilder,{ Reason } from './game.js';
+import * as sound from './sound.js';
 
 const CARROT_COUNT = 5; // carrot 초기화 
 const BUG_COUNT = 5;  // bug 초기화
@@ -15,7 +16,26 @@ const game = new GameBuilder()
 
 
 game.setGameStop(reason => {
-    gameFinishedBanner.show(reason === 'cancel' ? "Replay?" : reason === 'win' ? 'You Won!!' : 'You Lose!!')
+    let message = "";
+    switch (reason) {
+        case Reason.cancel:      
+            message = "Replay?";  
+            sound.playFailSound();    
+            sound.stopBgSound(); 
+            break;
+        case Reason.win:   
+            sound.playWinSound();
+            message = 'You Won!!';
+            break;
+        case Reason.lose:  
+            sound.playBugSound();
+            sound.stopBgSound(); 
+            message = 'You Lose!!';    
+            break;    
+        default:
+            throw new Error('not valid reason!')
+    }
+    gameFinishedBanner.show(message)
 })
 
 gameFinishedBanner.setClickListner(()=>{
