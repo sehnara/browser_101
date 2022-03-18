@@ -1,6 +1,6 @@
 'use strict'
 
-import Field from './field.js';
+import Field, { ItemType } from './field.js';
 import * as sound from './sound.js';
 
 export const Reason = Object.freeze({
@@ -60,7 +60,7 @@ class Game{
 
     onItemClick = (item) => {
         if(!this.started)return;    
-        if(item === "carrot"){
+        if(item === ItemType.carrot){
             this.count--;        
             this.setCount(this.count)
             if(this.count === 0){        

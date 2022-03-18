@@ -1,6 +1,11 @@
 'use strict';
 import * as sound from './sound.js';
 
+export const ItemType = Object.freeze({
+    carrot : "carrot",
+    bug : "bug"
+})
+
 export default class Field{
 
     constructor(carrotCount, bugCount){
@@ -43,11 +48,11 @@ export default class Field{
         if(target === 'carrot'){
             sound.playCarrotSound();
             this.field.removeChild(e.target.parentNode)
-            this.onItemClick&& this.onItemClick('carrot');
+            this.onItemClick&& this.onItemClick(ItemType.carrot);
         }
         else { 
             sound.playBugSound();
-            this.onItemClick&& this.onItemClick('bug');
+            this.onItemClick&& this.onItemClick(ItemType.bug);
         }
     }
     setClickListener(onItemClick){
